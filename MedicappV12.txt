@@ -1,0 +1,164 @@
+﻿Base de datos: `Medicapp`
+--
+CREATE DATABASE IF NOT EXISTS `Medicapp` DEFAULT CHARACTER SET utf8 COLLATE utf8_spanish_ci;
+USE `Medicapp`;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `citas`
+--
+
+CREATE TABLE IF NOT EXISTS `citas` (
+  `idCita` int(11) NOT NULL AUTO_INCREMENT,
+  `citFecha` date NOT NULL,
+  `citHora` time NOT NULL,
+  `citPaciente` int(11) NOT NULL,
+  `citMedico` int(11) NOT NULL,
+  `citConsultorio` int(11) NOT NULL,
+  `citEstado` enum('Asignado','Atendido') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'Asignado',
+  `citObservaciones` text COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`idCita`),
+  KEY `fk_paciente` (`citPaciente`),
+  KEY `fk_medico` (`citMedico`),
+  KEY `fk_consultorio` (`citConsultorio`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=4 ;
+
+--
+-- RELACIONES PARA LA TABLA `citas`:
+--   `citConsultorio`
+--       `consultorios` -> `idConsultorio`
+--   `citMedico`
+--       `medicos` -> `idMedico`
+--   `citPaciente`
+--       `pacientes` -> `idPaciente`
+--
+
+--
+-- Volcado de datos para la tabla `citas`
+--
+
+INSERT INTO `citas` (`idCita`, `citFecha`, `citHora`, `citPaciente`, `citMedico`, `citConsultorio`, `citEstado`, `citObservaciones`) VALUES
+(1, '2018-11-20', '11:51:00', 2, 2, 2, 'Atendido', 'Paciente atendido por medicina general, se remite a especialista'),
+(2, '2018-11-25', '07:10:00', 3, 2, 4, 'Asignado', ''),
+(3, '2018-05-01', '08:20:00', 9, 3, 4, 'Asignado', '');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `consultorios`
+--
+
+CREATE TABLE IF NOT EXISTS `consultorios` (
+  `idConsultorio` int(11) NOT NULL AUTO_INCREMENT,
+  `conNombre` char(15) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`idConsultorio`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `consultorios`
+--
+
+INSERT INTO `consultorios` (`idConsultorio`, `conNombre`) VALUES
+(1, 'CON-101'),
+(2, 'CON-102'),
+(3, 'CON-201'),
+(4, 'CON-202');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `medicos`
+--
+
+CREATE TABLE IF NOT EXISTS `medicos` (
+  `idMedico` int(11) NOT NULL AUTO_INCREMENT,
+  `medIdentificacion` char(15) COLLATE utf8_spanish_ci NOT NULL,
+  `medNombres` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `medApellidos` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `medEspecialidad` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `medTelefono` char(15) COLLATE utf8_spanish_ci NOT NULL,
+  `medCorreo` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`idMedico`),
+  UNIQUE KEY `medIdentificacion` (`medIdentificacion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `medicos`
+--
+
+INSERT INTO `medicos` (`idMedico`, `medIdentificacion`, `medNombres`, `medApellidos`, `medEspecialidad`, `medTelefono`, `medCorreo`) VALUES
+(1, '21', 'Jhon', 'Santos', 'Cardiologo', '1015428533', 'jhon.santos@medimas.com'),
+(2, '22', 'Christian', 'Garcia', 'Medico General', '79798940', 'christian.garcia@medimas.com'),
+(3, '23', 'Rodrigo', 'Latorre', 'Neurologo', '79884934', 'rodrigo.latorre@medimas.com'),
+(4, '24', 'Teresa', 'Mancilla', 'Gastroenterologa', '52654789', 'teresa.mancilla@medimas.com'),
+(5, '25', 'Juan', 'Rodrigez', 'Otorrinolaringologo', '80951753', 'juan.rodriguez@medimas.com'),(6, '26', 'Johanna', 'Albarracin', 'Psicologa', '1010159785', 'johana.albarracin@medimas.com'),(7, '27', 'Jose', 'Martinez', 'Optometra', '78654154', 'jose.martinez@medimas.com'),(8, '28', 'Alexandra', 'Urrea', 'Pediatra', '52411668', 'alexandra.urrea@medimas.com');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pacientes`
+--
+
+CREATE TABLE IF NOT EXISTS `pacientes` (
+  `idPaciente` int(11) NOT NULL AUTO_INCREMENT,
+  `pacIdentificacion` char(15) COLLATE utf8_spanish_ci NOT NULL,
+  `pacNombres` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `pacApellidos` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
+  `pacFechaNacimiento` date NOT NULL,
+  `pacSexo` enum('Femenino','Masculino') COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`idPaciente`),
+  UNIQUE KEY `pacIdentificacion` (`pacIdentificacion`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=11 ;
+
+--
+-- Volcado de datos para la tabla `pacientes`
+--
+
+INSERT INTO `pacientes` (`idPaciente`, `pacIdentificacion`, `pacNombres`, `pacApellidos`, `pacFechaNacimiento`, `pacSexo`) VALUES
+(2, '12', 'Christian', 'Linares', '1955-01-05', 'Masculino'),
+(3, '13', 'Juan', 'Pertuz', '1963-06-05', 'Masculino'),
+(4, '14', 'Andrea', 'Cespedes', '1995-01-05', 'Femenino'),
+(5, '15', 'Arnulfo', 'Tellez', '1993-01-12', 'Masculino'),
+(6, '16', 'Elvira', 'Torres', '1958-10-11', 'Femenino'),
+(7, '17' , 'Alejandra', 'Moreno', '1945-07-01', 'Femenino'),
+(8, '18', 'Adriana', 'Cardenas', '1975-12-23', 'Femenino'),(9, '19', 'Andres', 'Pinto', '1969-12-10', 'Masculino'),(10, '20', 'Alicia', 'Hernandez', '1981-10-10', 'Femenino'),(11, '21', 'Alonso', 'Caceres', '1936-10-27', 'Masculino'),(12, '22', 'Pilar', 'Pertuz', '1984-01-05', 'Femenino'),(13, '23', 'Roberto', 'Plata', '1960-08-09', 'Masculino'),(14, '24', 'Antonio', 'Mejia', '1974-02-11', 'Masculino'),(15, '25', 'Jhon', 'Valderrama', '1987-10-27', 'Masculino');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE IF NOT EXISTS `usuarios` (
+  `idUsuario` int(11) NOT NULL AUTO_INCREMENT,
+  `usuLogin` char(15) COLLATE utf8_spanish_ci NOT NULL,
+  `usuPassword` varchar(60) COLLATE utf8_spanish_ci NOT NULL,
+  `usuEstado` enum('Activo','Inactivo') COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`idUsuario`),
+  UNIQUE KEY `login` (`usuLogin`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`idUsuario`, `usuLogin`, `usuPassword`, `usuEstado`) VALUES
+(1, 'Medico', 'c93b85830345deff3a39fa0578250420', 'Activo'),
+(2, 'Asistente', '21a8277249d348a68f1ef4a5630184f8', 'Activo');
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `citas`
+--
+ALTER TABLE `citas`
+  ADD CONSTRAINT `fk_consultorios_idConsultorio` FOREIGN KEY (`citConsultorio`) REFERENCES `consultorios` (`idConsultorio`),
+  ADD CONSTRAINT `fk_medicos_idMedico` FOREIGN KEY (`citMedico`) REFERENCES `medicos` (`idMedico`),
+  ADD CONSTRAINT `fk_pacientes_idPaciente` FOREIGN KEY (`citPaciente`) REFERENCES `pacientes` (`idPaciente`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
